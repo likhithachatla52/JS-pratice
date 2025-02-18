@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Metadata and styling -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Payment Table</title>
+    <style>
+        /* Style the table */
+        table {
+            width: 50%; /* Set table width to 50% of the container */
+            border-collapse: collapse; /* Collapse borders to avoid double lines */
+            margin: 20px auto; /* Center the table horizontally with a 20px margin on top and bottom */
+        }
+        table, th, td {
+            border: 1px solid black; /* Apply a solid black border to the table, table headers, and cells */
+        }
+        th, td {
+            padding: 10px; /* Add 10px padding inside table cells */
+            text-align: center; /* Center text inside table cells */
+            background-color: antiquewhite; /* Set background color of table cells */
+        }
+        th {
+            background-color: #f2f2f2; /* Set a different background color for table headers */
+        }
+    </style>
+</head>
+<body>
+    <!-- Title of the page -->
+    <h1 style="text-align: center;">Loan Payment Table</h1>
+    <!-- Table to display loan payment information -->
+    <table id="loanTable">
+        <thead>
+            <tr>
+                <th>Month</th> <!-- Column header for the month -->
+                <th>Balance</th> <!-- Column header for the balance -->
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Table rows will be dynamically inserted here by JavaScript -->
+        </tbody>
+    </table>
+    <script>
+        // JavaScript code to execute when the page loads
+        window.onload = function() {
+            // Prompt the user to enter loan details and parse them as floats
+            const loanBalance = parseFloat(prompt("Enter the loan balance:"));
+            const annualRate = parseFloat(prompt("Enter the yearly interest rate (in %):"));
+            const monthlyPayment = parseFloat(prompt("Enter the monthly payment amount:"));
+
+            // Calculate the monthly interest rate from the annual rate
+            const monthlyRate = annualRate / 100 / 12;
+
+            // Get the table body element where rows will be inserted
+            const tableBody = document.querySelector("#loanTable tbody");
+
+            // Initialize the current balance with the loan balance and set the month counter
+            let currentBalance = loanBalance;
+            let month = 1;
+
+            // Loop to calculate and display balance for each month, up to 12 months
+            while (currentBalance > 0 && month <= 12) {
+                // Calculate the new balance for the current month
+                currentBalance = (1 + monthlyRate) * (currentBalance - monthlyPayment);
+                // If balance drops below zero, set it to zero
+                if (currentBalance < 0) currentBalance = 0;
+
+                // Create a new row for the table
+                const row = document.createElement("tr");
+                // Create table cells for month and balance
+                const monthCell = document.createElement("td");
+                const balanceCell = document.createElement("td");
+
+                // Set the text content of the cells
+                monthCell.textContent = month;
+                balanceCell.textContent = currentBalance.toFixed(2); // Format balance to 2 decimal places
+
+                // Append cells to the row
+                row.appendChild(monthCell);
+                row.appendChild(balanceCell);
+                // Append the row to the table body
+                tableBody.appendChild(row);
+
+                // Increment the month counter
+                month++;
+            }
+        };
+    </script>
+</body>
+</html>
